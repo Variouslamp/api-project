@@ -1,0 +1,94 @@
+openapi: 3.0.1
+info:
+  title: Servicio de Validación de Transacciones
+  version: "1.0"
+  description: |
+    API para procesar solicitudes de validación de transacciones entre servicios en tiempo real.
+paths:
+  /transactions/validate:
+    post:
+      summary: Valida una transacción enviada por un cliente.
+      operationId: validateTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionRequest"
+      responses:
+        "200":
+          description: Transacción aprobada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionApproved"
+        "400":
+          description: Solicitud inválida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Transacción rechazada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Error interno
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    TransactionRequest:
+      type: object
+      required:
+        - transactionId
+        - amount
+        - currency
+        - payerId
+        - timestamp
+      properties:
+        transactionId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          minimum: 1
+        currency:
+          type: string
+        payerId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+    TransactionApproved:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        processedAt:
+          type: string
+          format: date-time
+        traceId:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: array
+              items:
+                type: string
+            traceId:
+              type: string
