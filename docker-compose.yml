@@ -2,11 +2,6 @@ services:
   api:
     build: ./api
     ports:
-      - "8000:8000"
+      - "127.0.0.1:7777:8000"
     volumes:
-      - ./api/logs:/app/logs
-
-  client:
-    build: ./client
-    profiles:
-      - donotstart
+      - ./logs:/app/logs

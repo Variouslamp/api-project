@@ -29,7 +29,7 @@ api-project/
 │   ├── docs/                # Contrato y documentación
 │   ├── Dockerfile
 │   └── requirements.txt
-├── client/                  # Cliente (futuro)
+├── client/                  # Cliente interactivo (CLI)
 ├── docker-compose.yml       # Orquestación de servicios
 └── .gitignore
 ```
@@ -62,6 +62,20 @@ uvicorn app.main:app --reload
 ```
 
 La documentación interactiva (Swagger UI) estará disponible en `http://localhost:8000/docs`.
+
+## Cliente interactivo
+
+En `client/` hay un script CLI que permite probar la API manualmente:
+- Pregunta campo por campo (UUID, monto, moneda, pagador, timestamp)
+- Permite ingresar datos manuales para probar errores intencionalmente
+- Muestra la respuesta del servidor en JSON indentado
+- Puerto configurable via `client/.env`
+
+```bash
+python client/client.py
+```
+
+Ver `client/docs/instrucciones.txt` para una guía paso a paso.
 
 ## Documentación detallada
 
