@@ -1,0 +1,150 @@
+========================================
+  INSTRUCCIONES — Cliente de Validacion
+========================================
+
+REQUISITOS
+  - Python 3.11 o superior
+  - La API del Servicio de Validacion corriendo
+    (ver api/docs/tutorial_despliegue.txt)
+
+PASO 1: Configurar puerto (opcional)
+
+  Editar client/.env y cambiar el puerto si la API
+  no corre en el 8000 por defecto:
+
+    API_PORT=8000
+
+  Si no creas el archivo, usara 8000 por defecto.
+
+PASO 2: Ejecutar el cliente
+
+  Desde la raiz del proyecto:
+
+    python client/client.py
+
+  O desde la carpeta client/:
+
+    cd client
+    python client.py
+
+PASO 3: Llenar los campos
+
+  El cliente preguntara campo por campo:
+
+    [1/5] transactionId (UUID)
+      Desea ingresarlo manualmente? (s/N):
+      - Enter → se genera automaticamente
+      - s     → te pedira el UUID (se envia aunque sea invalido)
+
+    [2/5] Monto (amount)
+      Ingresa un numero (ej: 50000)
+
+    [3/5] Moneda (currency)
+      Ingresa la moneda (ej: COP)
+
+    [4/5] Pagador (payerId)
+      Ingresa el ID del usuario (ej: USR-00001)
+
+    [5/5] Timestamp
+      Desea ingresarlo manualmente? (s/N):
+      - Enter → se genera automaticamente
+      - s     → te pedira el timestamp ISO 8601
+
+PASO 4: Revisar y enviar
+
+  El cliente mostrara un resumen del JSON a enviar.
+  Confirma con Enter (s) para enviar o escribe n para
+  volver a llenar los campos.
+
+PASO 5: Ver la respuesta
+
+  La respuesta del servidor se mostrara RAW en formato
+  JSON indentado. Ahi podras ver si fue 200, 400 o 409.
+
+PASO 6: Repetir o salir
+
+  Despues de cada respuesta, pregunta si quieres hacer
+  otra validacion. Enter para continuar, n para salir.
+
+========================================
+  EJEMPLO DE SESION
+========================================
+
+$ python client/client.py
+
+==========================================================
+  Cliente de Validacion de Transacciones
+==========================================================
+  Servidor: http://localhost:8000
+
+  [1/5] transactionId (UUID)
+  Desea ingresarlo manualmente? (s/N):
+  UUID generado automaticamente.
+
+  [2/5] Monto (amount)
+  * Solo valores iguales o mayores a 1.
+    Si desea probar errores, coloque otros valores bajo su propia responsabilidad.
+  Monto: 50000
+
+  [3/5] Moneda (currency)
+  * La unica divisa soportada por el servidor es COP.
+    Si desea probar errores, puede ingresar otra bajo su propia responsabilidad.
+  Moneda: COP
+
+  [4/5] Pagador (payerId)
+  * Los usuarios registrados van de USR-00001 a USR-00010.
+  payerId: USR-00001
+
+  [5/5] Timestamp
+  Desea ingresarlo manualmente? (s/N):
+  Timestamp generado automaticamente.
+
+==========================================================
+  Resumen de la request:
+{
+  "transactionId": "550e8400-e29b-41d4-a716-446655440000",
+  "amount": "50000",
+  "currency": "COP",
+  "payerId": "USR-00001",
+  "timestamp": "2026-06-13T10:30:00Z"
+}
+==========================================================
+  Enviar request? (s/N):
+  Enviando request...
+
+  ------------------------------------------------------
+  RESPUESTA DEL SERVIDOR
+  ------------------------------------------------------
+{
+  "status": "APROVED",
+  "message": "La transaccion fue procesada correctamente",
+  "processedAt": "2026-06-13T10:30:01Z",
+  "traceId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}
+  ------------------------------------------------------
+
+  Realizar otra validacion? (s/N): n
+
+  Gracias por usar el cliente. Hasta luego!
+
+========================================
+  TROUBLESHOOTING
+========================================
+
+Error: "Connection refused"
+  → La API no esta corriendo. Inicia el servidor:
+      uvicorn app.main:app --port 8000
+
+Error: "No module named 'app'"
+  → Estas corriendo el cliente desde la carpeta incorrecta.
+    Ejecutalo desde la raiz del proyecto o desde client/:
+      python client/client.py
+
+Error: "404 Not Found"
+  → La URL del servidor es incorrecta.
+    Revisa que el puerto en .env coincida con el del servidor.
+
+La API responde 400 aunque los datos parecen correctos
+  → Revisa que el transactionId sea un UUID valido.
+  → Revisa que el monto sea ≥ 1.
+  → Revisa el formato del timestamp (ISO 8601).
