@@ -9,7 +9,7 @@ Proyecto universitario para la creación de un **Servicio de Validación de Tran
 | Framework | FastAPI |
 | Servidor ASGI | Uvicorn |
 | Validación | Pydantic |
-| Logging | structlog (JSON Lines) |
+| Logging | Python stdlib logging (multilínea) |
 | Contenedor | Docker |
 | Tests | pytest + httpx |
 
@@ -21,7 +21,7 @@ api-project/
 │   ├── app/
 │   │   ├── main.py          # Punto de entrada
 │   │   ├── models.py        # Schemas Pydantic
-│   │   ├── logging_config.py# Configuración de structlog
+│   │   ├── logging_config.py# Configuración de logging
 │   │   ├── users_db.py      # Diccionario de usuarios y saldos
 │   │   ├── routers/         # Endpoints
 │   │   └── services/        # Lógica de negocio
@@ -53,7 +53,7 @@ api-project/
 
 ```bash
 # Con Docker
-docker compose up api
+docker compose up -d
 
 # Sin Docker
 cd api
@@ -79,4 +79,4 @@ Ver `client/docs/instrucciones.txt` para una guía paso a paso.
 
 ## Documentación detallada
 
-Ver `api/docs/documentacion.md` para información completa del proyecto.
+Ver `documentacion.md` (raíz del proyecto) para información completa del proyecto, incluyendo arquitectura, logging, cliente interactivo y despliegue.

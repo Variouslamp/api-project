@@ -8,4 +8,8 @@ dist/
 build/
 .venv/
 venv/
-logs/*.jsonl
+# Logs generados al ejecutar la API localmente
+api/logs/
+
+# Logs generados por Docker (volumen montado en /app/logs)
+logs/
