@@ -1,5 +1,4 @@
 fastapi
 uvicorn
-structlog
 pytest
 httpx

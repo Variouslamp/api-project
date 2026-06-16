@@ -1,21 +1,17 @@
+import logging
 from uuid import uuid4
 
-import structlog
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
-from app.models import (
-    ErrorDetail,
-    ErrorResponse,
-    TransactionApproved,
-    TransactionRequest,
-)
+from app.models import ErrorDetail, ErrorResponse, TransactionRequest
 from app.services.validation import (
     InvalidRequestError,
     TransactionRejectedError,
     validate_transaction,
 )
 
+logger = logging.getLogger(__name__)
 router = APIRouter(tags=["transactions"])
 
 
@@ -23,27 +19,30 @@ router = APIRouter(tags=["transactions"])
 async def validate(request: TransactionRequest):
     trace_id = str(uuid4())
 
-    log = structlog.get_logger().bind(
-        trace_id=trace_id,
-        transaction_id=str(request.transactionId),
-    )
-    log.info(
-        "transaction.received",
-        amount=request.amount,
-        currency=request.currency,
-        payer_id=request.payerId,
-    )
+    req_data = {
+        "transactionId": str(request.transactionId),
+        "amount": request.amount,
+        "currency": request.currency,
+        "payerId": request.payerId,
+    }
+    resp_status = None
+    resp_data: dict = {}
 
     try:
         result = validate_transaction(request, trace_id)
-        log.info("transaction.approved")
+        resp_status = 200
+        resp_data = {"event": "transaction.approved"}
         return JSONResponse(
             status_code=200,
             content=result.model_dump(mode="json"),
         )
 
     except InvalidRequestError as e:
-        log.warning("transaction.invalid", details=e.details)
+        resp_status = 400
+        resp_data = {
+            "event": "transaction.invalid",
+            "details": "; ".join(e.details),
+        }
         return JSONResponse(
             status_code=400,
             content=ErrorResponse(
@@ -57,7 +56,11 @@ async def validate(request: TransactionRequest):
         )
 
     except TransactionRejectedError as e:
-        log.warning("transaction.rejected", details=e.details)
+        resp_status = 409
+        resp_data = {
+            "event": "transaction.rejected",
+            "details": "; ".join(e.details),
+        }
         return JSONResponse(
             status_code=409,
             content=ErrorResponse(
@@ -71,7 +74,11 @@ async def validate(request: TransactionRequest):
         )
 
     except Exception as e:
-        log.error("transaction.error", error=str(e))
+        resp_status = 500
+        resp_data = {
+            "event": "transaction.error",
+            "details": str(e),
+        }
         return JSONResponse(
             status_code=500,
             content=ErrorResponse(
@@ -82,4 +89,15 @@ async def validate(request: TransactionRequest):
                     traceId=trace_id,
                 )
             ).model_dump(mode="json"),
+        )
+
+    finally:
+        logger.info(
+            "",
+            extra={
+                "trace_id": trace_id,
+                "request_data": req_data,
+                "response_status": resp_status,
+                "response_data": resp_data,
+            },
         )
