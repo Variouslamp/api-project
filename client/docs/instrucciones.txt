@@ -10,11 +10,11 @@ REQUISITOS
 PASO 1: Configurar puerto (opcional)
 
   Editar client/.env y cambiar el puerto si la API
-  no corre en el 8000 por defecto:
+  no corre en el 7777 por defecto:
 
-    API_PORT=8000
+    API_PORT=7777
 
-  Si no creas el archivo, usara 8000 por defecto.
+  Si no creas el archivo, usara 7777 por defecto.
 
 PASO 2: Ejecutar el cliente
 
@@ -75,7 +75,7 @@ $ python client/client.py
 ==========================================================
   Cliente de Validacion de Transacciones
 ==========================================================
-  Servidor: http://localhost:8000
+  Servidor: http://localhost:7777
 
   [1/5] transactionId (UUID)
   Desea ingresarlo manualmente? (s/N):
@@ -133,7 +133,7 @@ $ python client/client.py
 
 Error: "Connection refused"
   → La API no esta corriendo. Inicia el servidor:
-      uvicorn app.main:app --port 8000
+      uvicorn app.main:app --port 7777
 
 Error: "No module named 'app'"
   → Estas corriendo el cliente desde la carpeta incorrecta.

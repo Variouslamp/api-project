@@ -91,12 +91,11 @@ def collect_payload() -> dict | None:
     print("  [2/5] Monto (amount)")
     print("  * Solo valores iguales o mayores a 1.")
     print("    Si desea probar errores, coloque otros valores bajo su propia responsabilidad.")
-    monto = input("  Monto: ").strip()
+    amount = input("  Monto: ").strip()
     try:
-        float(monto)
+        float(amount)
     except ValueError:
         print("  AVISO: el monto ingresado no es un numero valido")
-    amount = monto
 
     print("  [3/5] Moneda (currency)")
     print("  * La unica divisa soportada por el servidor es COP.")

@@ -13,10 +13,10 @@ python client/client.py
 Editar `client/.env` para cambiar el puerto:
 
 ```env
-API_PORT=8000
+API_PORT=7777
 ```
 
-Si no existe `.env`, se usa el puerto 8000 por defecto.
+Si no existe `.env`, se usa el puerto 7777 por defecto.
 
 ## Requisitos
 

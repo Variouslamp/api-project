@@ -32,7 +32,7 @@ Python puro para minimizar dependencias.
 ```
 client/
 ├── client.py        ← Script principal
-├── .env             ← Puerto del servidor (opcional, default 8000)
+├── .env             ← Puerto del servidor (opcional, default 7777)
 ├── docs/
 │   ├── diseno.md    ← Esta documentacion
 │   └── instrucciones.txt ← Tutorial paso a paso
@@ -117,11 +117,15 @@ lado del servidor lo convertira a numero.
 El puerto se define en `client/.env`:
 
 ```env
-API_PORT=8000
+API_PORT=7777
 ```
 
-Si el archivo no existe o no tiene la variable, se usa `8000` por defecto.
+Si el archivo no existe o no tiene la variable, se usa `7777` por defecto.
 Esto permite cambiar el puerto sin modificar el codigo.
+
+**Importante:** Si ejecutas la API localmente sin Docker, Uvicorn corre en el
+puerto `8000`. El cliente por defecto apunta al `7777` (para Docker). Debes
+cambiar `client/.env` a `API_PORT=8000` para conectar el cliente con la API local.
 
 ---
 
