@@ -1,5 +1,33 @@
 # Tutorial de Despliegue — Servicio de Validación de Transacciones
 
+## Despliegue Usando Docker (Recomendado)
+
+En la carpeta raiz del proyecto ejecutar con docker y docker compose instalados:
+
+```bash
+docker compose up -d
+```
+y verificamos si el docker esta activo con 
+
+
+```bash
+docker ps
+```
+y si notamos algo como 
+
+```bash
+CONTAINER ID   IMAGE             COMMAND                  CREATED          STATUS          PORTS                      NAMES
+7d4456f6670d   api-project-api   "uvicorn app.main:ap…"   10 seconds ago   Up 5 seconds    127.0.0.1:7777->8000/tcp   api-project-api-1
+```
+significa que esta corriendo.
+
+La API queda en: `http://localhost:7777`
+
+Si usas Swagger UI via Docker: `http://localhost:7777/docs`
+
+---
+# Despliegue local
+---
 ## Requisitos
 
 - Python 3.11 o superior instalado
@@ -102,17 +130,6 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 `--host 0.0.0.0` permite conexiones desde otras máquinas (no solo localhost).
 
-## Paso 10: Usando Docker (opcional)
-
-```bash
-docker compose up -d
-```
-
-La API queda en: `http://localhost:7777`
-
-Si usas Swagger UI via Docker: `http://localhost:7777/docs`
-
----
 
 ## Troubleshooting
 
